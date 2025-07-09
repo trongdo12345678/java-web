@@ -1,0 +1,64 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{~/css/style_view.css}">
+<body xmlns:th="http://www.thymeleaf.org" lang="en">
+		<h1 class="title text-center text-danger p-5" th:text="${productTitle}"></h1> 
+        <table class="table table-hover text-nowrap">
+    <thead>
+        <tr class="text-center">
+            <th>Images</th>
+            <th>Main Status</th>
+            <th>TT</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${#lists.isEmpty(productImages)}" class="text-center">
+        <td colspan="4">No positions found</td>
+    </tr>
+    <tr th:each="item, iterStat : ${productImages}">
+	    <td>
+	        <img th:if="${item.file_name != null}"
+	             th:src="@{/uploads/{imageName}(imageName=${item.file_name})}"
+	             width="60" alt="">
+	    </td>
+	    <td>
+	        <input type="radio"
+	               name="mainImage"
+	               th:value="${item.id}"
+	               th:checked="${item.main_status == 1 ? 'checked' : ''}"
+	               th:attr="data-id=${item.id}, data-product-id=${item.id_pro}"
+	               onchange="updateMainImage(this)">
+	        <label th:text="${item.main_status == 1 ? 'Main Image' : 'Secondary Image'}"></label>
+	    </td>
+	    <td>
+	        <a th:href="@{/admin/productImage/deleteProI(id=${item.id})}" 
+	           class="btn btn-danger delete-btn"
+	           th:attr="data-main-status=${item.main_status}"
+	           th:classappend="${item.main_status == 1 && #lists.size(productImages) > 1 ? ' disabled' : ''}">
+	           Delete Images
+	        </a>
+	    </td>
+	</tr>
+</tbody>
+</table>
+
+  <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
+	<script th:src="@{/js/js_view.js}"></script>
+	  <script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', function() {
+		    const deleteButtons = document.querySelectorAll('.delete-btn');
+		    let mainImageCount = document.querySelectorAll('input[name="mainImage"]:checked').length;
+		    let totalImageCount = document.querySelectorAll('input[name="mainImage"]').length;
+
+		    deleteButtons.forEach(function(button) {
+		        if (totalImageCount === 1 || (mainImageCount === 1 && button.getAttribute('data-main-status') === '1')) {
+		            button.classList.add('disabled');
+		            button.addEventListener('click', function(event) {
+		                event.preventDefault();
+		            });
+		        } else {
+		            button.classList.remove('disabled');
+		        }
+		    });
+	  </script>
+
+</body>

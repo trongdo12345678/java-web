@@ -1,0 +1,99 @@
+
+<body xmlns:th="http://www.thymeleaf.org" lang="en">
+<div th:replace="layout/header_admin"></div>
+<div class="content-wrapper" style="min-height: 1302.4px;">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Product</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Product</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Product Table</h3>
+
+                <div class="card-tools">
+                  <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                    <div class="input-group-append">
+                    	<a th:href="@{/admin/product/add}"  class="btn btn-success">Add Product</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr class="text-center">
+						<th>Title</th>
+						<th>Images</th>
+						<th>Price</th>
+						<th>Stocking</th>
+						<th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+				        <tr th:if="${#lists.isEmpty(products)}" class="text-center">
+					        <td colspan="4">No positions found</td>
+					    </tr>
+					    <tr th:each="item : ${products}" class="text-center">
+					        <td th:text="${item.title}"></td>
+					        <td>
+					            <img th:each="image : ${lsImage}" 
+					                 th:if="${image.id_pro == item.id and image.main_status == 1}" 
+					                 th:attr="src=@{/uploads/{imageName}(imageName=${image.file_name})}" 
+					                 width="60">
+					        </td>
+					        <td>
+					            <span th:text="${item.price}"></span>
+					            <script th:inline="javascript">
+					                var formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(/*[[${item.price}]]*/);
+					                document.currentScript.parentElement.innerHTML = formattedPrice;
+					            </script>
+					        </td>
+					        <td>
+					            <input type="checkbox" title="status" name="status" id="status" 
+					                   th:value="${item.status}" onchange="change(event)" th:if="${item.status} == 0"
+					                   th:attr="data-id=${item.id},data-title=${item.title},data-price=${item.price}">
+					                   
+					            <input type="checkbox" title="status" name="status" id="status" 
+					                   th:value="${item.status}" onchange="change(event)" checked th:unless="${item.status} == 0"
+					                   th:attr="data-id=${item.id},data-title=${item.title},data-price=${item.price}">
+					        </td>
+					        <td>
+					            <a th:href="@{/admin/productImage/viewImage/{id}(id=${item.id})}" class="btn btn-success">View Images</a>
+					            <a th:href="@{/admin/productImage/add(idproI=${item.id})}" class="btn btn-success">Add Images</a>
+					        </td>
+					    </tr>
+			    </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
+  <script th:src="@{/js/js_index.js}"></script>
+<div th:replace="layout/footer_admin"></div>
+</body>
+
