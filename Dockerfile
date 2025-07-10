@@ -7,6 +7,6 @@ RUN mvn clean package -DskipTests
 # Step 2: Run the Spring Boot app with Java 21
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/target/Wcd-0.0.1.war app.war
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.war"]
