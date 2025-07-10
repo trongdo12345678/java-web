@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,9 +25,14 @@ import com.utils.Views;
 
 
 @Controller
+@RequestMapping("/")
 public class ProductController {
     @Autowired
     ProductRepository rep;
+    @GetMapping
+    public String home() {
+        return "redirect:/admin/product/index";
+    }
     @GetMapping("admin/product/index")
     public String Index(Model model) {
         List<Product> products = rep.finAllPro();
@@ -125,6 +131,7 @@ public class ProductController {
         }
         return "redirect:/admin/productImage/error";
     }
+
 
 
 
